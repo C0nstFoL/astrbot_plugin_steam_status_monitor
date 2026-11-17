@@ -230,8 +230,8 @@ class SteamClientMixin:
                         'lastlogoff': player.get('lastlogoff'),
                         'gameextrainfo': player.get('gameextrainfo'),
                         'personastate': player.get('personastate', 0),
-                        'avatarfull': player.get('avatarfull'),
-                        'avatar': player.get('avatar')
+                        'avatarfull': _fix_avatar_cdn(player.get('avatarfull')),
+                        'avatar': _fix_avatar_cdn(player.get('avatar'))
                     }
             except Exception as e:
                 logger.warning(f"拉取 Steam 状态失败: {format_exception(e)} (SteamID: {steam_id}, 第{attempt+1}次重试)")
@@ -282,8 +282,8 @@ class SteamClientMixin:
                                     'lastlogoff': player.get('lastlogoff'),
                                     'gameextrainfo': player.get('gameextrainfo'),
                                     'personastate': player.get('personastate', 0),
-                                    'avatarfull': player.get('avatarfull'),
-                                    'avatar': player.get('avatar')
+                                    'avatarfull': _fix_avatar_cdn(player.get('avatarfull')),
+                                    'avatar': _fix_avatar_cdn(player.get('avatar'))
                                 }
                         # 成功处理本批，跳出重试
                         missing = [s for s in batch if s not in result]
@@ -946,3 +946,11 @@ class SteamClientMixin:
         if os.path.exists(cover_path):
             return cover_path
         return None
+
+
+def _fix_avatar_cdn(url):
+    if not url:
+        return url
+    return url.replace("//avatars.steamstatic.com/", "//avatars.fastly.steamstatic.com/")
+
+

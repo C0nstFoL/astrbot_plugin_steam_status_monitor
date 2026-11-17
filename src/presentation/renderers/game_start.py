@@ -33,6 +33,7 @@ async def get_avatar_path(data_dir, steamid, url, force_update=False, proxy=None
         return path
     if not url:
         return path if os.path.exists(path) else None
+    url = url.replace("//avatars.steamstatic.com/", "//avatars.fastly.steamstatic.com/")
     try:
         async with httpx.AsyncClient(timeout=10, **httpx_client_kwargs(proxy)) as client:
             resp = await client.get(url)

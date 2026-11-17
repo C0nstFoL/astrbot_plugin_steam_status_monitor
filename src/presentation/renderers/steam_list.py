@@ -66,6 +66,7 @@ def _load_image(path, size=None):
 async def fetch_avatar(avatar_url, data_dir, sid, proxy=None):
     if not avatar_url:
         return None
+    avatar_url = avatar_url.replace("//avatars.steamstatic.com/", "//avatars.fastly.steamstatic.com/")
     avatar_dir = os.path.join(data_dir, "avatars")
     os.makedirs(avatar_dir, exist_ok=True)
     path = os.path.join(avatar_dir, f"{sid}.jpg")
